@@ -1,0 +1,55 @@
+
+//  this is for createdby multiple users
+
+    let createdBy = [];
+    project.createdBy = await User.findById({ $in: project.createdBy }).select({ "firstname": 1, "lastname": 1 });
+    for (let creator of project.createdBy) {
+      if (!creator) return res.status(400).send("Invalid User");
+      createdBy.push({
+        _id: creator._id,
+        name: creator.firstname + ' ' + creator.lastname
+      })
+    }
+
+
+
+
+
+// PROJECT PUT ROUTE WITH MULTIPLE users
+
+router.put('/:id', async (req, res) => {
+  // verify project object
+
+  // create profile object
+  // save to db
+  //return response
+  let userId;
+  if (!project.createdBy.includes(userId)) return res.status(401).send("Unauthorised User");
+
+  try {
+    let project = await Project.findById(req.params.id);
+    let createdBy = [];
+    project.createdBy = await User.findById({ $in: project.createdBy }).select({ "firstname": 1, "lastname": 1 });
+
+    for (let creator of project.createdBy) {
+      creator = project.createdBy;
+      createdBy.push({
+        _id: creator._id,
+        name: creator.firstname + ' ' + creator.lastname
+      })
+    }
+
+    project = {
+      title: req.body.title ? req.body.title : project.title,
+      createdBy: req.body.createdBy ? req.body.createdBy : project.createdBy,
+      links: req.body.links ? req.body.links : project.links,
+      description: req.body.description ? req.body.description : project.description
+    }
+
+    project = await project.save();
+    res.status(200).send(project);
+  }
+  catch (err) {
+    res.status(500).send(err);
+  }
+})
