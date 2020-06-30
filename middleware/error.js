@@ -20,6 +20,6 @@ module.exports = function (err, req, res, next) {
   logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
   // render the error page
-  res.status(err.status || 500).send("Something went wrong...");
+  res.status(err.status || 500).send({ "error": "Something went wrong..." });
   res.render('error');
 }

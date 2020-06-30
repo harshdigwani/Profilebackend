@@ -5,11 +5,12 @@ const { User } = require('../models/user');
 const { Profile, validate } = require('../models/profile');
 const auth = require('../middleware/auth');
 
+// get all profiles
 router.get('/all', async (req, res, next) => {
-  // get all profiles
+  
   try {
     let result = await Profile.find();
-    if (!result) return res.status(404).send("No Profiles found");
+    if (!result) return res.status(404).send({ "error": "No Profiles found" });
     res.status(200).send(result)
 
   }
@@ -19,12 +20,14 @@ router.get('/all', async (req, res, next) => {
 
 })
 
+
+// get my profile
 router.get('/me', auth, async (req, res, next) => {
 
   const userId = req.user._id;
   try {
     let result = await Profile.findById(userId);
-    if (!result) return res.status(404).send("No Profile found with given id...");
+    if (!result) return res.status(404).send({ "error": "No Profile found with given id..." });
     res.status(200).send(result)
   }
   catch (err) {
@@ -33,13 +36,15 @@ router.get('/me', auth, async (req, res, next) => {
 
 })
 
+
+// Get Profile by id
 router.get('/:id', async (req, res, next) => {
   // get profile of a user with profileId
   const id = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).send("Invalid id");
+  if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).send({ "error": "Invalid id" });
   try {
     let result = await Profile.findById(req.params.id);
-    if (!result) return res.status(404).send("No Profile found with given id...");
+    if (!result) return res.status(404).send({ "error": "No Profile found with given id..." });
     res.status(200).send(result)
 
   }
@@ -48,19 +53,21 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+
+// Update Profile
 router.put('/me', auth, async (req, res, next) => {
 
   const userId = req.user._id;
-  if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(400).send("Invalid id");
+  if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(400).send({ "error": "Invalid id" });
 
   // verify Profile object
   const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send({ "error": error.details[0].message });
 
   try {
     let profile = await Profile.findById(userId);
 
-    if (profile._id != userId) return res.status(403).send("Unauthorised user");
+    if (profile._id != userId) return res.status(403).send({ "error": "Unauthorised user" });
 
     if (req.body.about) {
       profile.about.phone = req.body.about.phone ? req.body.about.phone : profile.about.phone;

@@ -1,3 +1,4 @@
+// my routes
 const express = require('express');
 const logger = require('./logging');
 const bodyParser = require('body-parser');
@@ -6,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const helmet = require('helmet');
 
+// middlewares
 const auth = require('../routes/auth');
 const profile = require('../routes/profile');
 const users = require('../routes/users');
@@ -23,7 +25,7 @@ module.exports = function (app) {
   app.use(express.static('public'));
   app.use(helmet());
   // app.use(cookieParser);
-  // app.use(cors);
+  app.use(cors());
   // app.options('*', cors());
   // enabling logging only in development
   if (app.get('env') == 'development') {
@@ -33,11 +35,11 @@ module.exports = function (app) {
 
   // home page routes
   app.get('/', (req, res) => {
-    return res.status(200).send('hello');
+    return res.status(200).send({ "message": 'hello' });
   });
   app.use('/api/auth', auth);
   app.use('/api/profile', profile);
-  app.use('/api/signup', users);
+  app.use('/api/users', users);
   app.use('/api/blogs', blogs);
   app.use('/api/projects', projects);
   app.use('/api/category', category);
