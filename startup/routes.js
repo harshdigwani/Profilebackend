@@ -35,7 +35,11 @@ module.exports = function (app) {
 
   // home page routes
   app.get('/', (req, res) => {
-    return res.status(200).send({ "message": 'hello' });
+    return res.status(200).json({
+      "status": 200,
+      "ok": true,
+      "message": 'hello there! I am up and running...'
+    });
   });
   app.use('/api/auth', auth);
   app.use('/api/profile', profile);
