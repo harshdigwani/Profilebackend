@@ -63,7 +63,7 @@ function validateProject(project) {
     category: Joi.objectId().trim().required(),
     createdBy: Joi.objectId().trim().required(),
     links: Joi.array().items(Joi.string().min(5).max(255)),
-    description: Joi.string().trim().max(1000).required()
+    description: Joi.string().trim().min(10).max(1000).required()
   });
 
   return schema.validate(project);

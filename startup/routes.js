@@ -20,12 +20,12 @@ const error = require('../middleware/error');
 module.exports = function (app) {
 
   // Middlewares
+  app.use(cors());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(express.static('public'));
   app.use(helmet());
   // app.use(cookieParser);
-  app.use(cors());
   // app.options('*', cors());
   // enabling logging only in development
   if (app.get('env') == 'development') {
